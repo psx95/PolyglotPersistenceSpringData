@@ -14,5 +14,6 @@ import br.com.spring.data.mongo.model.UserDetails;
  */
 @Repository
 public interface UserDetailsRepository extends MongoRepository<UserDetails, Long> {
+        @Override
 	public <S extends UserDetails> S save(S entity);
 }

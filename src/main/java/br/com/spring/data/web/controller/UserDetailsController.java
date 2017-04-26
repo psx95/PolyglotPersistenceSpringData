@@ -29,6 +29,9 @@ public class UserDetailsController {
 	@Autowired
 	private UserDetailsRepository userDetailsRepository;
 	
+        // tells the application Context to inject an Instance of the desired bean here
+        // all the spring beans are managed classes, i.e. they live inside the context
+        // autowiring means that the context will instatiate them, no need to instantiate them explicitely
 	@Autowired
 	private UserRepository userRepository;
 	

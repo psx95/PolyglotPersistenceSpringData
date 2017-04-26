@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.java.version>1.7</project.java.version>
+		<project.java.version>1.8</project.java.version>
 
 		<spring.data.mongo.version>1.2.0.RELEASE</spring.data.mongo.version>
 		<spring.version>3.1.4.RELEASE</spring.version>
@@ -24,12 +24,12 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 			<version>1.4.1.RELEASE</version>
-			<exclusions>
+<!--			<exclusions>
 				<exclusion>
 					<artifactId>aspectjrt</artifactId>
 					<groupId>org.aspectj</groupId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -40,10 +40,11 @@
 					<artifactId>spring-data-commons</artifactId>
 					<groupId>org.springframework.data</groupId>
 				</exclusion>
-				<exclusion>
+<!--				<exclusion>
 					<artifactId>aspectjrt</artifactId>
 					<groupId>org.aspectj</groupId>
-				</exclusion>
+				</exclusion> 
+                                -->
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -82,7 +83,7 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>${commons.dbcp.version}</version>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
@@ -93,11 +94,12 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 			<version>${aspectj.version}</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>
 		<finalName>spring-data-mongo</finalName>
+                <pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -153,5 +155,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+                </pluginManagement>
 	</build>
 </project>

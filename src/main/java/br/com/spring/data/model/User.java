@@ -25,6 +25,7 @@ public class User implements Serializable {
 	/**
 	 * 
 	 */
+    // @transient -  this value is not to be stored in the database    
 	@Transient
 	private static final long serialVersionUID = -7048268770422833351L;
 
@@ -32,6 +33,7 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+        @Transient
 	@RelatedDocument
 	private UserDetails userDetails;
 
