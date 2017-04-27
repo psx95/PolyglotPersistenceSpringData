@@ -30,12 +30,16 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -7048268770422833351L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)        
 	private Long id;
 	
+        @RelatedDocument
+        private Long idJoin;
+        
         @Transient
 	@RelatedDocument
 	private UserDetails userDetails;
+               
 
 	public Long getId() {
 		return id;
@@ -52,4 +56,12 @@ public class User implements Serializable {
 	public void setUserDetails(UserDetails userDetails) {
 		this.userDetails = userDetails;
 	}
+        
+        public Long getIdJoin(){
+            return idJoin;
+        }
+        
+        public void setIdJoin (Long idJoin){
+            this.idJoin = idJoin;
+        }
 }

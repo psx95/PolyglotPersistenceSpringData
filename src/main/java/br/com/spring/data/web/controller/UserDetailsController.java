@@ -3,7 +3,6 @@
  */
 package br.com.spring.data.web.controller;
 
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,11 +18,14 @@ import br.com.spring.data.mongo.repository.UserDetailsRepository;
 import br.com.spring.data.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Query;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * @author cad_rfirmino
+ * @author pranav
  *
  */
 @Controller
@@ -32,6 +34,9 @@ public class UserDetailsController {
 	
 	@Autowired
 	private UserDetailsRepository userDetailsRepository;
+        
+        @Autowired
+        private MongoOperations mongoOperations;
 	
         // tells the application Context to inject an Instance of the desired bean here
         // all the spring beans are managed classes, i.e. they live inside the context
@@ -46,9 +51,10 @@ public class UserDetailsController {
 	}
 	 
 	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public @ResponseBody void save(@RequestParam("name") String name) {
+	public @ResponseBody void save(@RequestParam("name") String name, @RequestParam("serial") Long serial) {
 		User user = new User();
-		UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(), name);
+                user.setIdJoin(serial);
+		UserDetails userDetails = new UserDetails(name, serial);
 		
 		user.setUserDetails(userDetails);
 		
@@ -61,7 +67,7 @@ public class UserDetailsController {
         
         @RequestMapping (value="/getall", headers = "Accept=*/*", method = RequestMethod.GET)
         public @ResponseBody ResponseEntity getAllUsers() {
-            Iterable<User> u = userRepository.findAll();
+            Iterable<User> u = userRepository.findAll();           
             List<User> n = new ArrayList<>();            
             if (u!=null){
                  for (User user : u){
@@ -73,6 +79,7 @@ public class UserDetailsController {
             return new ResponseEntity(n, HttpStatus.OK);            
         }
         
+        // this is working 
         @RequestMapping (value = "/get", headers = "Accept=*/*" , method = RequestMethod.GET)
         public @ResponseBody User getUser (@RequestParam("id") Long id){
            User user = userRepository.findOne(id);
@@ -87,5 +94,19 @@ public class UserDetailsController {
                return user;
                //return new ResponseEntity(user, HttpStatus.OK);
            }
+        }
+        
+        @RequestMapping (value = "/getDetails", headers = "Accept=*/*", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity getDetails (@RequestParam("id") Long id){            
+            User user = userRepository.findOne(id);
+            UserDetails ud = userDetailsRepository.findOne(user.getIdJoin());
+            //UserDetails details = mongoOperations.findOne(org.springframework.data.mongodb.core.query.Query.query(Criteria.where("joinid").is(id)), UserDetails.class,"UserDetails");            
+            if (ud != null){
+                // display the user details
+                return new ResponseEntity (ud,HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity(HttpStatus.FOUND);
+            }
         }
 }
