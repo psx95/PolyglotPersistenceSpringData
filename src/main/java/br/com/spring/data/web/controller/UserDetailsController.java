@@ -17,6 +17,10 @@ import br.com.spring.data.model.User;
 import br.com.spring.data.mongo.model.UserDetails;
 import br.com.spring.data.mongo.repository.UserDetailsRepository;
 import br.com.spring.data.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author cad_rfirmino
@@ -54,4 +58,34 @@ public class UserDetailsController {
 		//Salva so Mongo na tabela UserDetails
 		userDetailsRepository.save(userDetails);
 	}
+        
+        @RequestMapping (value="/getall", headers = "Accept=*/*", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity getAllUsers() {
+            Iterable<User> u = userRepository.findAll();
+            List<User> n = new ArrayList<>();            
+            if (u!=null){
+                 for (User user : u){
+                     n.add(user);
+                     if (user.getUserDetails()!=null)
+                    System.out.println (user.getId()+" "+user.getUserDetails().getUsername());                 
+                }
+            }          
+            return new ResponseEntity(n, HttpStatus.OK);            
+        }
+        
+        @RequestMapping (value = "/get", headers = "Accept=*/*" , method = RequestMethod.GET)
+        public @ResponseBody User getUser (@RequestParam("id") Long id){
+           User user = userRepository.findOne(id);
+           if (user == null){               
+               System.out.println ("hifw");
+               return null;
+               //return new ResponseEntity("User with id "+id.toString()+" does not exist",HttpStatus.GONE);               
+           }
+           else {
+               // user with id found
+               System.out.println ("here"+user.getId());
+               return user;
+               //return new ResponseEntity(user, HttpStatus.OK);
+           }
+        }
 }
