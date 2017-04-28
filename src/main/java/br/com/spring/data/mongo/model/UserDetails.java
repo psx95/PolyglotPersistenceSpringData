@@ -25,15 +25,22 @@ public class UserDetails implements Serializable {
 	
 //	@Id 
 //	private String id;
-	private String username;
+	private String username=null;
         @Id
         private Long joinid;
 	
+        
+        // different types of constructors 
 	public UserDetails(String username, Long joinid) {
 		//this.id = id;
-		this.username = username;
+               
+                this.username = username;                
                 this.joinid = joinid;
 	}
+        
+        public UserDetails (Long joinid) {
+            this.joinid = joinid;
+        }
         
         public Long getJoinid (){
             return joinid;

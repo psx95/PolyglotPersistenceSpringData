@@ -51,10 +51,16 @@ public class UserDetailsController {
 	}
 	 
 	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public @ResponseBody void save(@RequestParam("name") String name, @RequestParam("serial") Long serial) {
+	public @ResponseBody ResponseEntity save(@RequestParam("name") String name, @RequestParam("serial") Long serial) {
 		User user = new User();
                 user.setIdJoin(serial);
-		UserDetails userDetails = new UserDetails(name, serial);
+		UserDetails userDetails;
+                if (name == null){
+                    userDetails = new UserDetails(serial);
+                }
+                else {
+                    userDetails = new UserDetails(name, serial);
+                }
 		
 		user.setUserDetails(userDetails);
 		
@@ -63,7 +69,19 @@ public class UserDetailsController {
 		
 		//Salva so Mongo na tabela UserDetails
 		userDetailsRepository.save(userDetails);
+                return new ResponseEntity(HttpStatus.OK);
 	}
+        
+//        @RequestMapping(value = "/save", method = RequestMethod.POST)
+//        public @ResponseBody ResponseEntity save (@RequestParam("serial")Long serial){
+//            User user = new User();
+//            user.setIdJoin(serial);
+//            UserDetails userDetails = new UserDetails (serial);
+//            user.setUserDetails(userDetails);
+//            userRepository.save(user);
+//            userDetailsRepository.save(userDetails);
+//            return new ResponseEntity(HttpStatus.OK);
+//        }
         
         @RequestMapping (value="/getall", headers = "Accept=*/*", method = RequestMethod.GET)
         public @ResponseBody ResponseEntity getAllUsers() {
