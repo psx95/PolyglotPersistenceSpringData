@@ -109,4 +109,24 @@ public class UserDetailsController {
                 return new ResponseEntity(HttpStatus.FOUND);
             }
         }
+        
+        // this is working
+        @RequestMapping (value ="/delete", headers ="Accept=*/*", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity deleteObject (@RequestParam("id") Long id){
+            // get the user object from the mysql table
+            User u = userRepository.findOne(id);
+            // get the user details from the mongodb repository 
+            UserDetails userDetails = userDetailsRepository.findOne(u.getIdJoin());
+            if (userDetails != null){
+                userRepository.delete(id);
+                userDetailsRepository.delete(u.getIdJoin());
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity(HttpStatus.FOUND);
+            }
+        }
+        
+        // update operation will work by sending a save request on the same url as the same new object, 
+        // save the data onto the same id, the user details will update 
 }
