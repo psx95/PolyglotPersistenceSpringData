@@ -4,6 +4,7 @@
 package br.com.spring.data.mongo.model;
 
 import java.io.Serializable;
+import org.springframework.beans.factory.annotation.Required;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -24,7 +25,7 @@ public class UserDetails implements Serializable {
 	private static final long serialVersionUID = -408792323018501921L;
 	
 //	@Id 
-//	private String id;
+//	private String id;       
 	private String username=null;
         @Id
         private Long joinid;
@@ -40,6 +41,10 @@ public class UserDetails implements Serializable {
         
         public UserDetails (Long joinid) {
             this.joinid = joinid;
+        }
+        
+        public UserDetails(){
+            // required- empty constructor 
         }
         
         public Long getJoinid (){

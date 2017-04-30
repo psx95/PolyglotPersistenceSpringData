@@ -18,11 +18,11 @@ import br.com.spring.data.mongo.repository.UserDetailsRepository;
 import br.com.spring.data.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Query;
+import java.util.Optional;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * @author pranav
@@ -46,22 +46,34 @@ public class UserDetailsController {
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView init(){
-		ModelAndView modelAndView = new ModelAndView("user-details");
+		ModelAndView modelAndView = new ModelAndView("user-details.jsp");
 		return modelAndView;
 	}
+        
+//        @RequestMapping(value = "/addStudent", method = RequestMethod.POST)
+//      public String addStudent(@ModelAttribute("user")User student, Map<String,Object> model, HttpServletRequest()) {
+//           model.addAttribute("name", student.getUserDetails().getUsername());           
+//           model.addAttribute("serial", student.getIdJoin());
+//           return "result";
+//        }
 	 
-	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public @ResponseBody ResponseEntity save(@RequestParam("name") String name, @RequestParam("serial") Long serial) {
+	@RequestMapping(value="/save", method=RequestMethod.GET)
+	public @ResponseBody ResponseEntity save(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "serial") Long serial) {
 		User user = new User();
                 user.setIdJoin(serial);
-		UserDetails userDetails;
-                if (name == null){
-                    userDetails = new UserDetails(serial);
+		UserDetails userDetails = new UserDetails();                
+		if (name=="")
+                {
+                    userDetails.setJoinid(serial);
+                }
+                else if (name!=null){                   
+                    userDetails.setUsername(name);
+                    userDetails.setJoinid(serial);
                 }
                 else {
-                    userDetails = new UserDetails(name, serial);
-                }
-		
+                    userDetails.setJoinid(serial);
+                }               
+                userDetails.setJoinid(serial);
 		user.setUserDetails(userDetails);
 		
 		//Salva no MySql e no Mongo
