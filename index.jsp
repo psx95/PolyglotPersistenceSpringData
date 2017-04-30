@@ -1,3 +1,11 @@
+<%-- 
+    Document   : save
+    Created on : 30 Apr, 2017, 11:58:30 AM
+    Author     : Pranav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -19,7 +27,7 @@
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq" />
 			
 				
-				<form class="af-form" id="af-form" novalidate>
+                                <form class="af-form" id="af-form" action="/spring-data-mongo-cross-store/user-details/add" method="get">
 					
 					<div class="af-outer af-required">
 						<div class="af-inner">
@@ -31,14 +39,14 @@
 					<div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-name">Name*</label>
-							<input type="text" name="fullname" id="input-name" required>
+							<input type="text" name="name" id="input-name" required>
 						</div>
 					</div>
 					
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-email">Email address*</label>
-						  <input type="email" name="email_address" id="input-email" required>
+						  <input type="email" name="email" id="input-email" required>
 						</div>
 					</div>
 					
@@ -52,33 +60,33 @@
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-country">Country*</label>
-						  <input type="email" name="country" id="input-country" required>
+						  <input type="text" name="country" id="input-country" required>
 						</div>
 					</div>
 					
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-phone">Phone Number</label>
-						  <input type="email" name="phonenumber" id="input-phone">
+						  <input type="number" name="phonenumber" id="input-phone">
 						</div>
 					</div>
                  <h3>Feedback</h3>
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-hearaboutus">How did you hear about us?</label>
-							<input type="text" name="hearaboutus" id="input-hearaboutus" required>
+							<input type="text" name="answer1" id="input-hearaboutus" required>
 						</div>
 					</div>
                      <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-helpful">Was the website helpful?</label>
-							<input type="text" name="helpful" id="input-helpful" required>
+							<input type="text" name="answer2" id="input-helpful" required>
 						</div>
 					</div>
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-best">What was most useful?</label>
-							<input type="text" name="best" id="input-best" required>
+							<input type="text" name="answer3" id="input-best" required>
 						</div>
 					</div>
                     
@@ -87,14 +95,14 @@
 					 <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-improve">How do you suggest we improve?</label>
-							<input type="text" name="improve" id="input-improve" required>
+							<input type="text" name="answer4" id="input-improve" required>
 						</div>
 					</div>
                     
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-message">Any Additional Message?</label>
-							<input type="text" name="message" id="input-message" required>
+							<input type="text" name="answer5" id="input-message" required>
 						</div>
 					</div>
                     

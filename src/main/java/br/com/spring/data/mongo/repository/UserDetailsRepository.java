@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import br.com.spring.data.mongo.model.UserDetails;
 
 /**
- * @author cad_rfirmino
+ * @author pranav
  *
  */
 @Repository

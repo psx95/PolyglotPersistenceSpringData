@@ -13,16 +13,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.spring.data.model.User;
+import br.com.spring.data.model.UserDemographics;
 import br.com.spring.data.mongo.model.UserDetails;
+import br.com.spring.data.mongo.model.UserFeedback;
 import br.com.spring.data.mongo.repository.UserDetailsRepository;
+import br.com.spring.data.mongo.repository.UserFeedbackRepository;
+import br.com.spring.data.repository.UserDemographicsRepository;
 import br.com.spring.data.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * @author pranav
@@ -37,6 +39,12 @@ public class UserDetailsController {
         
         @Autowired
         private MongoOperations mongoOperations;
+        
+        @Autowired
+        private UserFeedbackRepository userFeedbackRepository;
+        
+        @Autowired
+        private UserDemographicsRepository userDemographicsRepository;
 	
         // tells the application Context to inject an Instance of the desired bean here
         // all the spring beans are managed classes, i.e. they live inside the context
@@ -46,7 +54,7 @@ public class UserDetailsController {
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView init(){
-		ModelAndView modelAndView = new ModelAndView("user-details.jsp");
+		ModelAndView modelAndView = new ModelAndView("index");
 		return modelAndView;
 	}
         
@@ -57,6 +65,37 @@ public class UserDetailsController {
 //           return "result";
 //        }
 	 
+        // testing 
+        @RequestMapping(value = "/add", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity addEntry (@RequestParam(value = "title", required = false) String title, @RequestParam(value = "name") String name, @RequestParam(value = "email")String email, @RequestParam(value = "birthdate") String birthdate, @RequestParam(value = "country")String country, @RequestParam(value = "phonenumber")String phonenumber, @RequestParam(value = "answer1", required = false) String answer1, @RequestParam(value = "answer2", required = false)String answer2, @RequestParam(value = "answer3", required = false)String answer3, @RequestParam(value = "answer4", required = false)String answer4, @RequestParam(value = "answer5", required = false)String answer5){
+            UserDemographics demographics = new UserDemographics(title,name,email,birthdate,country,phonenumber);            
+            UserFeedback userFeedback = new UserFeedback();
+            if (answer1 != ""){
+                userFeedback.setAnswer1(answer1);
+            }
+            if (answer2 != ""){
+                userFeedback.setAnswer2(answer2);
+            }
+            if (answer3 != ""){
+                userFeedback.setAnswer3(answer3);
+            }
+            if (answer4 != ""){
+                userFeedback.setAnswer4(answer4);
+            }
+            if (answer5 != ""){
+                userFeedback.setAnswer5(answer5);
+            }
+            // linking mongodb entries to mysql
+            if (userFeedback.equals(null)){
+                System.out.println ("not good");
+            }
+            demographics.setFeedback(userFeedback);
+            userDemographicsRepository.save(demographics);
+            userFeedback.setId(demographics.getId());
+            userFeedbackRepository.save(userFeedback);                       
+            return new ResponseEntity(HttpStatus.OK);
+        }    
+        
 	@RequestMapping(value="/save", method=RequestMethod.GET)
 	public @ResponseBody ResponseEntity save(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "serial") Long serial) {
 		User user = new User();
