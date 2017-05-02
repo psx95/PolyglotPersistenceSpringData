@@ -27,7 +27,7 @@
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq" />
 			
 				
-                                <form class="af-form" id="af-form" action="/spring-data-mongo-cross-store/user-details/add" method="get">
+                                <form class="af-form" id="af-form" action="/spring-data-mongo-cross-store/add" method="post">
 					
 					<div class="af-outer af-required">
 						<div class="af-inner">
@@ -74,19 +74,19 @@
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-hearaboutus">How did you hear about us?</label>
-							<input type="text" name="answer1" id="input-hearaboutus" required>
+							<input type="text" name="answer1" id="input-hearaboutus" >
 						</div>
 					</div>
                      <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-helpful">Was the website helpful?</label>
-							<input type="text" name="answer2" id="input-helpful" required>
+							<input type="text" name="answer2" id="input-helpful" >
 						</div>
 					</div>
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-best">What was most useful?</label>
-							<input type="text" name="answer3" id="input-best" required>
+							<input type="text" name="answer3" id="input-best" >
 						</div>
 					</div>
                     
@@ -95,14 +95,14 @@
 					 <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-improve">How do you suggest we improve?</label>
-							<input type="text" name="answer4" id="input-improve" required>
+							<input type="text" name="answer4" id="input-improve" >
 						</div>
 					</div>
                     
                     <div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-message">Any Additional Message?</label>
-							<input type="text" name="answer5" id="input-message" required>
+							<input type="text" name="answer5" id="input-message" >
 						</div>
 					</div>
                     

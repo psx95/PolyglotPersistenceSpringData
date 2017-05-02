@@ -20,18 +20,22 @@ import br.com.spring.data.mongo.repository.UserDetailsRepository;
 import br.com.spring.data.mongo.repository.UserFeedbackRepository;
 import br.com.spring.data.repository.UserDemographicsRepository;
 import br.com.spring.data.repository.UserRepository;
+import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * @author pranav
  *
  */
 @Controller
-@RequestMapping("/user-details")
 public class UserDetailsController {
 	
 	@Autowired
@@ -58,42 +62,92 @@ public class UserDetailsController {
 		return modelAndView;
 	}
         
-//        @RequestMapping(value = "/addStudent", method = RequestMethod.POST)
-//      public String addStudent(@ModelAttribute("user")User student, Map<String,Object> model, HttpServletRequest()) {
-//           model.addAttribute("name", student.getUserDetails().getUsername());           
-//           model.addAttribute("serial", student.getIdJoin());
-//           return "result";
+        @RequestMapping(value = "/redirect", method = RequestMethod.POST)
+        public String sendRedirect (@RequestParam(value = "location") String location){
+            return location;
+        }
+
+//        @RequestMapping(value = "/view", method = RequestMethod.POST)
+//        public String viewUser (@ModelAttribute("test") UserDemographics demographics, Map<String, Object> map){
+//            long id = userDemographicsRepository.count();
+//            if (userDemographicsRepository.exists(id)){
+//                // send data from controller to jsp                 
+//                map.put ("test",demographics);
+//            }
+//            return "viewResponse";
 //        }
-	 
-        // testing 
-        @RequestMapping(value = "/add", method = RequestMethod.GET)
-        public @ResponseBody ResponseEntity addEntry (@RequestParam(value = "title", required = false) String title, @RequestParam(value = "name") String name, @RequestParam(value = "email")String email, @RequestParam(value = "birthdate") String birthdate, @RequestParam(value = "country")String country, @RequestParam(value = "phonenumber")String phonenumber, @RequestParam(value = "answer1", required = false) String answer1, @RequestParam(value = "answer2", required = false)String answer2, @RequestParam(value = "answer3", required = false)String answer3, @RequestParam(value = "answer4", required = false)String answer4, @RequestParam(value = "answer5", required = false)String answer5){
+        
+        @RequestMapping(value ="/viewFeedback", method = RequestMethod.GET)
+        public ModelAndView displayFeedback (@RequestParam("id")Long id){
+            UserFeedback feedback = userFeedbackRepository.findOne(id);
+            ModelAndView model = new ModelAndView("viewFeedback");
+            model.addObject("feedback",feedback);
+            return model;
+        }
+        
+        @RequestMapping(value="/viewAll", method = RequestMethod.POST)
+        public ModelAndView getAllUserInfo (){
+            Iterable<UserDemographics> i = userDemographicsRepository.findAll();
+            List<UserDemographics> list = new ArrayList<>();
+            Iterator<UserDemographics> iterator = i.iterator();            
+            UserFeedback feedback = new UserFeedback();
+            UserDemographics ud = new UserDemographics();
+            while (iterator.hasNext()){              
+                ud = iterator.next();
+                feedback = userFeedbackRepository.findOne(ud.getId());
+                ud.setFeedback(feedback);
+                list.add(ud);
+            }                       
+            ModelAndView model = new ModelAndView("viewResponse");
+            model.addObject("lists",list);
+            return model;
+        }
+        
+        @RequestMapping(value = "/add", method = RequestMethod.POST)
+        public String addEntry (@RequestParam(value = "title", required = false) String title, @RequestParam(value = "name") String name, @RequestParam(value = "email")String email, @RequestParam(value = "birthdate") String birthdate, @RequestParam(value = "country")String country, @RequestParam(value = "phonenumber")String phonenumber, @RequestParam(value = "answer1", required = false) String answer1, @RequestParam(value = "answer2", required = false)String answer2, @RequestParam(value = "answer3", required = false)String answer3, @RequestParam(value = "answer4", required = false)String answer4, @RequestParam(value = "answer5", required = false)String answer5, @ModelAttribute("test") UserDemographics d, ModelMap modelMap){
             UserDemographics demographics = new UserDemographics(title,name,email,birthdate,country,phonenumber);            
             UserFeedback userFeedback = new UserFeedback();
-            if (answer1 != ""){
+            if (!"".equals(answer1)){
                 userFeedback.setAnswer1(answer1);
             }
-            if (answer2 != ""){
+            if (!"".equals(answer2)){            
                 userFeedback.setAnswer2(answer2);
             }
-            if (answer3 != ""){
+            if (!"".equals(answer3)){
                 userFeedback.setAnswer3(answer3);
             }
-            if (answer4 != ""){
+            if (!"".equals(answer4)){
                 userFeedback.setAnswer4(answer4);
             }
-            if (answer5 != ""){
+            if (!"".equals(answer5)){
                 userFeedback.setAnswer5(answer5);
             }
             // linking mongodb entries to mysql
             if (userFeedback.equals(null)){
                 System.out.println ("not good");
-            }
+            }           
             demographics.setFeedback(userFeedback);
-            userDemographicsRepository.save(demographics);
+            userDemographicsRepository.save(demographics); 
             userFeedback.setId(demographics.getId());
-            userFeedbackRepository.save(userFeedback);                       
-            return new ResponseEntity(HttpStatus.OK);
+            userFeedbackRepository.save(userFeedback);
+            modelMap.addAttribute("title",demographics.getTitle());
+            modelMap.addAttribute("email",demographics.getEmail());
+            modelMap.addAttribute("id",demographics.getId());
+            modelMap.addAttribute("name",demographics.getName());
+            modelMap.addAttribute("birthdate", demographics.getBirthdate());
+            modelMap.addAttribute("phone",demographics.getPhonenumber());
+            modelMap.addAttribute("country",demographics.getCountry());
+            if (answer1 != "")
+            modelMap.addAttribute("answer1",answer1);
+            if (answer2 != "") 
+            modelMap.addAttribute("answer2",answer2);
+            if (answer3 != "")
+            modelMap.addAttribute("answer3",answer3);
+            if (answer4 != "")
+            modelMap.addAttribute("answer4",answer4);
+            if (answer5 != "")
+            modelMap.addAttribute("answer5", answer5);
+            return "success";
         }    
         
 	@RequestMapping(value="/save", method=RequestMethod.GET)
@@ -105,7 +159,8 @@ public class UserDetailsController {
                 {
                     userDetails.setJoinid(serial);
                 }
-                else if (name!=null){                   
+                else if (name!=null){      
+                    
                     userDetails.setUsername(name);
                     userDetails.setJoinid(serial);
                 }
@@ -132,7 +187,19 @@ public class UserDetailsController {
 //            userRepository.save(user);
 //            userDetailsRepository.save(userDetails);
 //            return new ResponseEntity(HttpStatus.OK);
-//        }
+//        }62
+        
+        @RequestMapping (value = "/getdemographics", headers = "Accept=*/*", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity getAllDetails (){
+            Iterable<UserDemographics> demographicses = userDemographicsRepository.findAll();
+            List <UserDemographics> demographicsList = new ArrayList<>();
+            if (demographicsList != null){
+                for (UserDemographics demographics : demographicses){
+                    demographicsList.add(demographics);                    
+                }
+            }
+            return new ResponseEntity(demographicses, HttpStatus.OK);
+        }
         
         @RequestMapping (value="/getall", headers = "Accept=*/*", method = RequestMethod.GET)
         public @ResponseBody ResponseEntity getAllUsers() {
@@ -163,6 +230,19 @@ public class UserDetailsController {
                return user;
                //return new ResponseEntity(user, HttpStatus.OK);
            }
+        }
+        
+        @RequestMapping (value = "/userDemograph", headers = "Accept=*/*", method = RequestMethod.GET)
+        public @ResponseBody ResponseEntity<Object> getUserDemographs (@RequestParam("id") Long id){
+            UserDemographics demographics = userDemographicsRepository.findOne(id);   
+            UserFeedback feedback = userFeedbackRepository.findOne(id);           
+//            String s = new Gson().toJson(demographics);
+//            String s2 = new Gson().toJson(feedback);
+//            s = s.concat(s2);
+            List<Object> objects = new ArrayList<>();
+            objects.add(demographics);
+            objects.add(feedback);
+            return new ResponseEntity (objects, HttpStatus.OK);
         }
         
         @RequestMapping (value = "/getDetails", headers = "Accept=*/*", method = RequestMethod.GET)

@@ -7,7 +7,7 @@
         <title>Insert title here</title>
     </head>
     <body>
-        <form  action="/spring-data-mongo-cross-store/user-details/save" method="get">
+        <form  action="/spring-data-mongo-cross-store/save" method="get">
             Name:
             <input type="text" name="name" />            
             Serial:

@@ -12,7 +12,7 @@
 	</bean>
 
 	<mongo:mongo host="127.0.0.1" port="27017" />
-	<mongo:db-factory dbname="spring-form" />
+	<mongo:db-factory dbname="spring-minor" />
 	<mongo:repositories base-package="br.com.spring.data.mongo.repository" mongo-template-ref="mongoTemplate" />
 
 	<!-- Mongo cross-store aspect config -->
