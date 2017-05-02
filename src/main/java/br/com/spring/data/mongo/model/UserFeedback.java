@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Pranav
  */
 @Document(collection="UserFeedback")
+//@JsonInclude(Include.NON_NULL)
 public class UserFeedback implements Serializable{
     
     @Id

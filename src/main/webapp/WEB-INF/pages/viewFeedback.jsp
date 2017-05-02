@@ -44,5 +44,7 @@
                 <td>${feedback.answer5}</td>
             </tr>
         </table>
+            <p>Feedback Response in JSON Form is</p>
+            <pre>${feedbackAsJson}</pre>
     </body>
 </html>

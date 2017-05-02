@@ -135,6 +135,10 @@
                         <input type="hidden" name="location" value="viewResponse"/>
                         <input type="submit" value="View All Responses"/>
                     </form>
+                    <form action="/spring-data-mongo-cross-store/viewUnstructured" method="post">
+                        <input type="hidden" name="location" value="viewUnstructured" />
+                        <input type="submit" value="View The MongoDB Collection" />
+                    </form>                  
                 </div>                    
 	</div>                
 </body>

@@ -20,11 +20,14 @@ import br.com.spring.data.mongo.repository.UserDetailsRepository;
 import br.com.spring.data.mongo.repository.UserFeedbackRepository;
 import br.com.spring.data.repository.UserDemographicsRepository;
 import br.com.spring.data.repository.UserRepository;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,11 +80,41 @@ public class UserDetailsController {
 //            return "viewResponse";
 //        }
         
+        @RequestMapping(value = "/viewUnstructured", method = RequestMethod.POST)
+        public ModelAndView displayDocuments (){
+            String json = null;
+            ObjectMapper mapper = new ObjectMapper();            
+            List<UserFeedback> feedbacks = userFeedbackRepository.findAll();
+            try {
+                mapper.setSerializationInclusion(Include.NON_NULL);
+                json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(feedbacks);                                
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(UserDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ModelAndView model = new ModelAndView("allDocuments");
+            model.addObject("list_feedbacks",json);
+            return model;
+        }
+        
         @RequestMapping(value ="/viewFeedback", method = RequestMethod.GET)
         public ModelAndView displayFeedback (@RequestParam("id")Long id){
+            ObjectMapper mapper = new ObjectMapper();
             UserFeedback feedback = userFeedbackRepository.findOne(id);
+            String jsonString = null;
+            try {
+                String json = mapper.writeValueAsString(feedback);
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(UserDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                mapper.setSerializationInclusion(Include.NON_NULL);
+                jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(feedback);
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(UserDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             ModelAndView model = new ModelAndView("viewFeedback");
             model.addObject("feedback",feedback);
+            model.addObject("feedbackAsJson",jsonString);
             return model;
         }
         
